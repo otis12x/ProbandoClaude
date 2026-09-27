@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Quinteto</title>
+  <meta name="description" content="Adivina la palabra de cinco letras en seis intentos. Un juego de palabras en español.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&display=swap">
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+  <div class="app">
+    <header class="cabecera">
+      <button type="button" class="boton-icono" id="btn-ayuda" aria-label="Cómo jugar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="9.5"/>
+          <path d="M9.2 9.3a2.9 2.9 0 0 1 5.6 1c0 1.9-2.8 2.4-2.8 4.2"/>
+          <circle cx="12" cy="17.6" r="0.6" fill="currentColor"/>
+        </svg>
+      </button>
+
+      <div class="marca">
+        <h1 class="titulo">Quinteto</h1>
+        <div class="modos" role="group" aria-label="Modo de juego">
+          <button type="button" class="modo" id="modo-diaria" aria-pressed="true">Del día <span id="numero-dia"></span></button>
+          <button type="button" class="modo" id="modo-practica" aria-pressed="false">Práctica</button>
+        </div>
+      </div>
+
+      <button type="button" class="boton-icono" id="btn-estadisticas" aria-label="Estadísticas">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true">
+          <path d="M5 20v-7M12 20V5M19 20v-10"/>
+        </svg>
+      </button>
+    </header>
+
+    <main class="zona-tablero">
+      <div class="tablero" id="tablero" role="group" aria-label="Tablero"></div>
+      <p class="pista" id="pista"></p>
+      <button type="button" class="boton-seguir" id="btn-seguir" hidden></button>
+    </main>
+
+    <div class="aviso" id="aviso" role="status" aria-live="polite"></div>
+
+    <div class="teclado" id="teclado" role="group" aria-label="Teclado"></div>
+  </div>
+
+  <dialog class="dialogo" id="dlg-ayuda" aria-labelledby="ayuda-titulo">
+    <button type="button" class="boton-icono cerrar" aria-label="Cerrar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <h2 id="ayuda-titulo">Cómo jugar</h2>
+    <p>Adivina la palabra de cinco letras en seis intentos. Cada intento tiene que ser una palabra que exista.</p>
+    <p>Después de cada intento, las fichas cambian de color para mostrar qué tan cerca estás.</p>
+
+    <h3>Ejemplos</h3>
+    <div class="ejemplo">
+      <span class="ficha" data-estado="acierto">c</span><span class="ficha">i</span><span class="ficha">e</span><span class="ficha">l</span><span class="ficha">o</span>
+    </div>
+    <p>La <b>C</b> está en la palabra y en el lugar correcto.</p>
+    <div class="ejemplo">
+      <span class="ficha">n</span><span class="ficha">u</span><span class="ficha" data-estado="presente">b</span><span class="ficha">e</span><span class="ficha">s</span>
+    </div>
+    <p>La <b>B</b> está en la palabra, pero en otro lugar.</p>
+    <div class="ejemplo">
+      <span class="ficha">r</span><span class="ficha">a</span><span class="ficha" data-estado="ausente">t</span><span class="ficha">o</span><span class="ficha">n</span>
+    </div>
+    <p>La <b>T</b> no está en la palabra.</p>
+
+    <h3>Detalles del español</h3>
+    <ul>
+      <li>Las tildes no cuentan: para <b>ÁRBOL</b> escribe <b>ARBOL</b>.</li>
+      <li>La <b>Ñ</b> es una letra distinta de la <b>N</b>.</li>
+      <li>Cada día hay una palabra nueva, la misma para todos. En <b>Práctica</b> puedes jugar todas las que quieras.</li>
+    </ul>
+  </dialog>
+
+  <dialog class="dialogo" id="dlg-resultado" aria-labelledby="resultado-titulo">
+    <button type="button" class="boton-icono cerrar" aria-label="Cerrar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <h2 id="resultado-titulo">Estadísticas</h2>
+    <p class="resultado-palabra" id="resultado-palabra" hidden></p>
+
+    <dl class="cifras">
+      <div><dt>Jugadas</dt><dd id="st-jugadas">0</dd></div>
+      <div><dt>% de victorias</dt><dd id="st-porcentaje">0</dd></div>
+      <div><dt>Racha actual</dt><dd id="st-racha">0</dd></div>
+      <div><dt>Mejor racha</dt><dd id="st-mejor">0</dd></div>
+    </dl>
+
+    <h3>Intentos para ganar</h3>
+    <ol class="distribucion" id="distribucion"></ol>
+
+    <div class="acciones">
+      <button type="button" class="boton primario" id="btn-compartir">Copiar resultado</button>
+      <button type="button" class="boton" id="btn-otra">Otra palabra</button>
+    </div>
+    <textarea class="texto-compartir" id="texto-compartir" readonly hidden aria-label="Resultado para copiar"></textarea>
+    <p class="cuenta-atras" id="cuenta-atras" hidden></p>
+  </dialog>
+
+  <script src="palabras.js"></script>
+  <script src="juego.js"></script>
+</body>
+</html>
